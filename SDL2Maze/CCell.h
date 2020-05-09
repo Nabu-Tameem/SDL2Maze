@@ -1,7 +1,7 @@
 #pragma once
-#include <memory>
-#include <vector>
+
 #include <utility>
+#include <SDL.h>
 
 class CCell
 {
@@ -18,7 +18,7 @@ public:
 	 */
 	std::pair<int, int> getPos() { return std::make_pair(mX, mY); }
 
-	void draw(int size, int xOffset, int yOffset);
+	void draw(SDL_Rect* cellRect, int size, int xOffset, int yOffset);
 
 
 private:

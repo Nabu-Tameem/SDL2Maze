@@ -5,8 +5,9 @@
  * Constructor
  * @param x The x coordinate of the cell
  * @param y The y coordinate of the cell
+ * @param blocked Specifiy if the cell is blocked, default false
  */
-CCell::CCell(int x, int y, bool blocked = false)
+CCell::CCell(int x, int y, bool blocked)
 {
 	this->mX = x;
 	this->mY = y;
@@ -19,7 +20,7 @@ CCell::CCell(int x, int y, bool blocked = false)
  * @param xOffset The amount of pixels to offset this cell by in the x coordinate
  * @param yOffset The amount of pixels to offset this cell by in the y coordinate
  */
-void CCell::draw(int size, int xOffset, int yOffset)
+void CCell::draw(SDL_Rect* cellRect, int size, int xOffset, int yOffset)
 {
     
 }
