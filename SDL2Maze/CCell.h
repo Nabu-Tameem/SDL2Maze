@@ -6,26 +6,25 @@
 class CCell
 {
 public:
-	CCell(int x, int y, bool blocked = false);
-
-	CCell() = delete;
+	CCell();
 	CCell(const CCell &) = delete;
 	CCell operator=(CCell&) = delete;
-	
-	/**
-	 * Retrive the position of the cell in the board
-	 * @returns: pair<int, int> The corrdinates of the cell
-	 */
-	std::pair<int, int> getPos() { return std::make_pair(mX, mY); }
 
-	void draw(SDL_Rect cellRect, SDL_Renderer* renderer);
+	void draw(SDL_Rect cellRect, SDL_Renderer* renderer, int xOffset, int yOffset);
+	/**
+	 * Set the block state of the cell
+	 * @param isBlocked The block state of the cell, true if blocked, false otherwise
+	 */
+	void setBlocked(bool isBlocked) { mBlocked = isBlocked; }
+	/**
+	 * get the block state of the cell
+	 * @return bool The block state of the cell
+	 */
+	bool isBlocked() { return mBlocked; }
 
 
 private:
-			
-	int mX;				///< X coordinate of the cell relative to the board
-	int mY;				///< Y coordinate of the cell relative to the board
 
-	bool mBlocked;		///< Specify if the cell is blocked or not
+	bool mBlocked = false;		///< Specify if the cell is blocked or not
 };
 

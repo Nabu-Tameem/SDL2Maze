@@ -22,12 +22,21 @@ public:
 
 private:
 	/// All the cells contained in the board
-	std::vector<std::shared_ptr<CCell> > mCells;
+	std::vector<std::vector<std::shared_ptr<CCell> > > mCells;
 	/// Rectangle representing a single cell, used for drawing the cells
 	SDL_Rect mCellRect;
 
-	int mCellXOffset;
-	int mCellYOffset;
+	/// Rectangle used to draw the border
+	SDL_Rect mBorderRect;
+	/// Rectangle used to make the border hollow
+	SDL_Rect mBoardRect;
 
+	/// distance from border to the cells
+	int mBoardSeperation = 5;
+
+	///// Width of the board (excluding outside empty space)
+	//int mWidth;
+	///// Height of the board (excluding outside empty space)
+	//int mHeight;
 };
 
