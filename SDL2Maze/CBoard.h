@@ -24,7 +24,10 @@ private:
 	/// All the cells contained in the board
 	std::vector<std::shared_ptr<CCell> > mCells;
 	/// Rectangle representing a single cell, used for drawing the cells
-	SDL_Rect cell;
+	SDL_Rect mCellRect;
+
+	int mCellXOffset;
+	int mCellYOffset;
 
 };
 

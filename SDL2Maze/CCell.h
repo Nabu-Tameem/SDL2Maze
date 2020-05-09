@@ -18,7 +18,7 @@ public:
 	 */
 	std::pair<int, int> getPos() { return std::make_pair(mX, mY); }
 
-	void draw(SDL_Rect* cellRect, int size, int xOffset, int yOffset);
+	void draw(SDL_Rect cellRect, SDL_Renderer* renderer);
 
 
 private:

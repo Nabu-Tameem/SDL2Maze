@@ -10,14 +10,15 @@ using namespace std;
  */
 CBoard::CBoard(int rows, int cols, int screenHeight, int screenWidth)
 {
-    // The number of pixels of empty space in the entire board (2px around each cell)
+    // The number of pixels of empty space in the entire board 
+    // (1px around each cell, in other words, 2px in the inside of the board, 1px on the outside)
     // This is used to figure out the size in pixels for each column and row
-    int rowsEmptySpaces = (rows + 2) * 2; 
-    int colsEmptySpaces = (cols + 2) * 2;
+    int rowsEmptySpaces = (rows - 1) * 2 + 2; 
+    int colsEmptySpaces = (cols - 1) * 2 + 2;
 
     // Calculate the height and width of each cell (floor of the number will be used, because int)
-    this->cell.h = (screenHeight - rowsEmptySpaces) / rows;
-    this->cell.w = (screenWidth - colsEmptySpaces) / cols;
+    this->mCellRect.h = (screenHeight - rowsEmptySpaces) / rows;
+    this->mCellRect.w = (screenWidth - colsEmptySpaces) / cols;
 
     // Generate all the needed cell
     for (int i = 0; i < rows; i++) {
@@ -35,13 +36,13 @@ CBoard::CBoard(int rows, int cols, int screenHeight, int screenWidth)
  */
 void CBoard::draw(SDL_Renderer* renderer)
 {
-    // TODO actually make the board draw the cell
+    // Clear the screen
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
     SDL_RenderClear(renderer);
 
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
-    SDL_RenderDrawLine(renderer, 320, 200, 300, 240);
-    SDL_RenderDrawLine(renderer, 300, 240, 340, 240);
-    SDL_RenderDrawLine(renderer, 340, 240, 320, 200);
+    for (shared_ptr<CCell> cell : this->mCells) {
+        cell->draw(this->mCellRect, renderer);
+    }
+
     SDL_RenderPresent(renderer);
 }
