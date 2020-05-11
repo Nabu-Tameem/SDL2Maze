@@ -41,12 +41,24 @@ public:
 	/**
 	 * Sets the cell as the starting cell
 	 */
-	void setStarting() { mStartingCell = true; mGoalCell = false; }
+	void setStarting() { mStarting = true; mGoal = false; }
 
 	/**
 	 * Sets the cell as the goal cell
 	 */
-	void setGoal() { mGoalCell = true; mStartingCell = false; }
+	void setGoal() { mGoal = true; mStarting = false; }
+
+	/**
+	 * Checks if the cell is a starting cell
+	 * @return bool If the cell is a starting cell
+	 */
+	bool isStarting() { return mStarting; }
+
+	/**
+	 * Checks if the cell is a goal cell
+	 * @return bool If the cell is a goal cell
+	 */
+	bool isGoal() { return mGoal; }
 
 private:
 	/// Indicate if the cell has been visited by the maze generator
@@ -61,9 +73,9 @@ private:
 	/// Indicates if the cell is the current target during the maze generation
 	bool mCurrentGenerationCell = false;	
 	/// Indicates if this cell is the starting cell
-	bool mStartingCell = false;
+	bool mStarting = false;
 	/// Indicates if the cell is the goal cell
-	bool mGoalCell = false;
+	bool mGoal = false;
 
 
 };
