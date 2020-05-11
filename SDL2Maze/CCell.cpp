@@ -34,7 +34,7 @@ void CCell::draw(SDL_Rect cellRect, SDL_Renderer* renderer, int xOffset, int yOf
     SDL_SetRenderDrawColor(renderer, 255, 0, 0, SDL_ALPHA_OPAQUE);
 
 
-    // Draw wall fillers, these will make connected cells appear to be connected
+    // Draw the horizontal connection between the cells
     if (this->mSouthCell != nullptr) {
         SDL_Rect wallFiller;
 
@@ -47,6 +47,7 @@ void CCell::draw(SDL_Rect cellRect, SDL_Renderer* renderer, int xOffset, int yOf
         SDL_RenderFillRect(renderer, &wallFiller);
     }
 
+    // Draw the vertical connection between the cells
     if (this->mEastCell != nullptr) {
         SDL_Rect wallFiller;
 

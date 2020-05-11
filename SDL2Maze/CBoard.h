@@ -11,7 +11,7 @@
 class CBoard
 {
 public:
-	CBoard(int rows, int cols, int screenHeight = 600, int screenWidth = 800);
+	CBoard(int rows, int cols, int screenWidth = 800, int screenHeight = 600);
 
 	/** default constructor, deleted */
 	CBoard() = delete;
@@ -38,6 +38,20 @@ public:
 	 * @param width The new width of the boarder
 	 */
 	void setBorderWidth(int width) { mBorderWidth = width; }
+
+	/**
+	 * Sets a cell as a starting cell
+	 * @param x The row the cell is in
+	 * @param y The col the cell is in
+	 */
+	void setStarting(int x, int y) { mCells[x][y]->setStarting(); }
+
+	/**
+	 * Sets a cell as a goal cell
+	 * @param x The row the cell is in
+	 * @param y The col the cell is in
+	 */
+	void setGoal(int x, int y) { mCells[x][y]->setGoal(); }
 
 private:
 	/// All the cells contained in the board

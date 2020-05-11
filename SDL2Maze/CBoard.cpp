@@ -14,7 +14,7 @@ constexpr int LEFT = 3;
  * @param screenHeight The height of the screen in pixels
  * @param screenWidth The width of the screen in pixels
  */
-CBoard::CBoard(int rows, int cols, int screenHeight, int screenWidth)
+CBoard::CBoard(int rows, int cols, int screenWidth, int screenHeight)
 {
     // The number of pixels of empty space in the entire board 
     // This is used to figure out the size in pixels for each column and row

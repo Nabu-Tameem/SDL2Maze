@@ -13,16 +13,6 @@ public:
 	CCell operator=(CCell&) = delete;
 
 	void draw(SDL_Rect cellRect, SDL_Renderer* renderer, int xOffset, int yOffset, int seperation);
-	///**
-	// * Sets the block state of the cell
-	// * @param isBlocked The block state of the cell, true if blocked, false otherwise
-	// */
-	//void setBlocked(bool blocked) { mBlocked = blocked; }
-	///**
-	// * gets the block state of the cell
-	// * @return bool The block state of the cell
-	// */
-	//bool isBlocked() { return mBlocked; }
 
 	/**
 	 * sets the visit state of the cell
@@ -48,18 +38,32 @@ public:
 	 */
 	bool isGenerationCell() { return mCurrentGenerationCell; }
 
+	/**
+	 * Sets the cell as the starting cell
+	 */
+	void setStarting() { mStartingCell = true; mGoalCell = false; }
+
+	/**
+	 * Sets the cell as the goal cell
+	 */
+	void setGoal() { mGoalCell = true; mStartingCell = false; }
+
 private:
+	/// Indicate if the cell has been visited by the maze generator
+	bool mVisited = false;							
 
-	/*bool mBlocked = false;		///< Specify if the cell is blocked or not*/
-	bool mVisited = false;
-
-	// Pointer to the cells that are connected to this cell in the maze.
+	/// Pointer to the cells that are connected to this cell in the maze.
 	std::shared_ptr<CCell> mNorthCell = nullptr;
 	std::shared_ptr<CCell> mEastCell = nullptr;
 	std::shared_ptr<CCell> mSouthCell = nullptr;
 	std::shared_ptr<CCell> mWestCell = nullptr;
-
-	bool mCurrentGenerationCell = false; ///< Indicates if the cell is the current target during the maze generation
+	
+	/// Indicates if the cell is the current target during the maze generation
+	bool mCurrentGenerationCell = false;	
+	/// Indicates if this cell is the starting cell
+	bool mStartingCell = false;
+	/// Indicates if the cell is the goal cell
+	bool mGoalCell = false;
 
 
 };

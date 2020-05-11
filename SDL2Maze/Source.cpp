@@ -6,9 +6,11 @@ int main(int argc, char* args[]) {
 	SDL_Init(SDL_INIT_VIDEO);
 	SDL_Window* window = SDL_CreateWindow("test", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, SDL_WINDOW_SHOWN);
 	SDL_Renderer* renderer = SDL_CreateRenderer(window, 0, 0);
-    CBoard board(80, 80, 720, 1280);
+    CBoard board(80, 80, 1280, 720);
     srand(time(NULL));
     bool running = true;
+    board.setGoal(80, 80);
+    board.setStarting(0, 0);
     while (running) {
         SDL_Event event;
         board.draw(renderer);
