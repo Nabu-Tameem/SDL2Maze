@@ -40,13 +40,15 @@ public:
 
 	/**
 	 * Sets the cell as the starting cell
+	 * @param starting Represents if the cell is a starting cell or not
 	 */
-	void setStarting() { mStarting = true; mGoal = false; }
+	void setStarting(bool starting) { mStarting = starting; }
 
 	/**
 	 * Sets the cell as the goal cell
+	 * @param goal Represents if the cell is a goal cell or not
 	 */
-	void setGoal() { mGoal = true; mStarting = false; }
+	void setGoal(bool goal) { mGoal = goal; }
 
 	/**
 	 * Checks if the cell is a starting cell

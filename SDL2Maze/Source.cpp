@@ -9,8 +9,7 @@ int main(int argc, char* args[]) {
     CBoard board(80, 80, 1280, 720);
     srand(time(NULL));
     bool running = true;
-    board.setGoal(80, 80);
-    board.setStarting(0, 0);
+    board.setGoal(80, 79, true);
     while (running) {
         SDL_Event event;
         board.draw(renderer);

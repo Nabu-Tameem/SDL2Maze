@@ -39,19 +39,23 @@ public:
 	 */
 	void setBorderWidth(int width) { mBorderWidth = width; }
 
+
+	// REMOVED NO NEED FOR IT AND COULD CAUSE MISS USE
 	/**
 	 * Sets a cell as a starting cell
-	 * @param x The row the cell is in
-	 * @param y The col the cell is in
+	 * @param x The col the cell is in
+	 * @param y The row the cell is in
+	 * @param state The state of the cell as starting
 	 */
-	void setStarting(int x, int y) { mCells[x][y]->setStarting(); }
+	//void setStarting(int x, int y, bool state) { mCells[y][x]->setStarting(true); }
 
 	/**
 	 * Sets a cell as a goal cell
-	 * @param x The row the cell is in
-	 * @param y The col the cell is in
+	 * @param x The col the cell is in
+	 * @param y The row the cell is in
+	 * @param state The state of the cell as goal
 	 */
-	void setGoal(int x, int y) { mCells[x][y]->setGoal(); }
+	void setGoal(int x, int y, bool state) { mCells[y][x]->setGoal(true); }
 
 private:
 	/// All the cells contained in the board
@@ -70,5 +74,7 @@ private:
 	int mCellSeperation = 2;
 	/// width of the border
 	int mBorderWidth = 5;
+	/// The cell to start the generation with, also the boards starting cell
+	std::shared_ptr<CCell> mStartingCell;
 };
 

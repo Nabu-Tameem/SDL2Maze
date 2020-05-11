@@ -53,9 +53,10 @@ CBoard::CBoard(int rows, int cols, int screenWidth, int screenHeight)
     this->mBorderRect.x = (screenWidth - this->mBorderRect.w) / 2;
     this->mBorderRect.y = (screenHeight - this->mBorderRect.h) / 2;
 
-}
-
-void createWall(string wallName, int direction) {
+    // Picks a random cell in first column to be the starting cell
+    int row = rand() % rows;
+    mStartingCell = mCells[row][0];
+    mStartingCell->setStarting(true);
 
 }
 
