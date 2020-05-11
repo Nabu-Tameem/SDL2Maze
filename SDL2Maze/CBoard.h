@@ -1,9 +1,11 @@
 #pragma once
 
-#include <SDL.h>
 #include <memory>
 #include <vector>
+#include <map>
+#include <string>
 
+#include "bin/include/SDL2/SDL.h"
 #include "CCell.h"
 
 class CBoard
@@ -18,7 +20,24 @@ public:
 	/** assignment constructor, deleted */
 	CBoard operator=(CBoard&) = delete;
 
+	void generateCell();
 	void draw(SDL_Renderer* renderer);
+
+	/**
+	 * Set the distance between the board and the border
+	 * @param distance The distance between the board and the border
+	 */
+	void setBoardSeperation(int distance) { mBoardSeperation = distance; }
+	/**
+	 * Set the distance between the cell
+	 * @param distance The distance between the cell
+	 */
+	void setCellSeperation(int distance) { mCellSeperation = distance; }
+	/**
+	 * Set the boarder width
+	 * @param width The new width of the boarder
+	 */
+	void setBorderWidth(int width) { mBorderWidth = width; }
 
 private:
 	/// All the cells contained in the board
@@ -33,10 +52,9 @@ private:
 
 	/// distance from border to the cells
 	int mBoardSeperation = 5;
-
-	///// Width of the board (excluding outside empty space)
-	//int mWidth;
-	///// Height of the board (excluding outside empty space)
-	//int mHeight;
+	/// distance between cells
+	int mCellSeperation = 2;
+	/// width of the border
+	int mBorderWidth = 5;
 };
 
