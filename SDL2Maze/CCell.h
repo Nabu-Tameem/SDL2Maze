@@ -94,11 +94,25 @@ public:
 	void setWest(std::shared_ptr<CCell> cell) { mWestCell = cell; }
 
 	/**
-	 * Sets a cell as stopped, in other words a cell that gets blocked during generation and
-	 * the board needs to back track
-	 * @param stopped The stopping state of the cell
+	 * Sets this as part of the solution or not
+	 * @param solution Represents if the cell will be part of the solution or not
 	 */
-	void setStopped(bool stopped) { mStopped = true; }
+	void setSolution(bool solution) { mSolution = solution; }
+
+	/**
+	 * Checks if this cell is a part of the current solution
+	 * @returns bool Indicating if this cell is part of the current solution
+	 */
+	bool isSolution() { return mSolution; }
+
+	/**
+	 * Sets this as the cell the user is currently on
+	 * @param current Represents if the cell is the users current cell or not
+	 */
+	void setCurrentUserCell(bool current) { mCurrentUserCell = current; }
+
+	void clear();
+
 private:
 	/// Column and row of the cell
 	SDL_Point mPos;
@@ -118,7 +132,10 @@ private:
 	bool mStarting = false;
 	/// Indicates if the cell is the goal cell
 	bool mGoal = false;
-
-	bool mStopped = false;
+	/// Indicate if this cell is part of the current solution/user generated solution
+	bool mSolution = false;
+	/// Indicate if the user is currently on this cell
+	bool mCurrentUserCell = false;
+	
 };
 

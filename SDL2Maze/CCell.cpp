@@ -29,11 +29,13 @@ void CCell::draw(SDL_Rect cellRect, SDL_Renderer* renderer, int xOffset, int yOf
     if (this->mStarting)
         SDL_SetRenderDrawColor(renderer, 0, 255, 0, SDL_ALPHA_OPAQUE);
     else if (this->mGoal)
-        SDL_SetRenderDrawColor(renderer, 255, 150, 0, SDL_ALPHA_OPAQUE);
-    else if (this->mStopped)
-        SDL_SetRenderDrawColor(renderer, 102, 51, 153, SDL_ALPHA_OPAQUE);
-    else if (this->mCurrentGenerationCell)
         SDL_SetRenderDrawColor(renderer, 255, 255, 0, SDL_ALPHA_OPAQUE);
+    else if (this->mCurrentGenerationCell)
+        SDL_SetRenderDrawColor(renderer, 255, 125, 0, SDL_ALPHA_OPAQUE);
+    else if (this->mCurrentUserCell)
+        SDL_SetRenderDrawColor(renderer, 255, 0, 255, SDL_ALPHA_OPAQUE);
+    else if (this->mSolution)
+        SDL_SetRenderDrawColor(renderer, 0, 255, 255, SDL_ALPHA_OPAQUE);
     else
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
 
@@ -90,4 +92,17 @@ map<string, shared_ptr<CCell>> CCell::getNeighbors()
 
 
     return neighbors;
+}
+
+/**
+ * Clears cell to its original values (clears maze generation)
+ */
+void CCell::clear()
+{
+    this->mNorthCell = nullptr;
+    this->mSouthCell = nullptr;
+    this->mEastCell = nullptr;
+    this->mWestCell = nullptr;
+    
+    this->mVisited = false;
 }

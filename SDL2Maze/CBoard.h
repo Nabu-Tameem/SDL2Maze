@@ -20,17 +20,8 @@ public:
 	/** assignment constructor, deleted */
 	CBoard operator=(CBoard&) = delete;
 
-	void generate(SDL_Renderer* renderer);
+	void generate();
 	void draw(SDL_Renderer* renderer);
-
-	// REMOVED NO NEED FOR IT AND COULD CAUSE MISS USE
-	/**
-	 * Sets a cell as a starting cell
-	 * @param x The col the cell is in
-	 * @param y The row the cell is in
-	 * @param state The state of the cell as starting
-	 */
-	//void setStarting(int x, int y, bool state) { mCells[y][x]->setStarting(true); }
 
 	/**
 	 * Sets a cell as a goal cell
@@ -51,6 +42,12 @@ public:
 	 */
 	int maxCol() { return int(mCells[0].size()) - 1; }
 
+	void clear();
+	void solve();
+	void clearSolution();
+
+	void move(std::string direction);
+	
 
 private:
 	/// All the cells contained in the board
@@ -71,10 +68,14 @@ private:
 	int mBorderWidth = 5;
 	/// The cell to start the generation with, also the boards starting cell
 	std::shared_ptr<CCell> mStartingCell;
+	/// The current cell the user is on
+	std::shared_ptr<CCell> mCurrentUserCell;
+
+	bool mGenerated = false; /// indicate if a maze has already been generated
 
 	void link(std::shared_ptr<CCell> firstCell, std::shared_ptr<CCell> secondCell);
-
 	std::shared_ptr<CCell> getNextMove(std::shared_ptr<CCell> currentCell);
 	bool isBlocked(std::shared_ptr<CCell>);
+
 };
 

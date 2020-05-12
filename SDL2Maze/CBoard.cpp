@@ -57,12 +57,15 @@ CBoard::CBoard(int rows, int cols, int screenWidth, int screenHeight)
     mStartingCell = mCells[startingRow][0];
     mStartingCell->setStarting(true);
 
+    mCurrentUserCell = mStartingCell;
+    mCurrentUserCell->setSolution(true);
+
 }
 
 /**
  * Pick a cell to be a part of the maze
  */
-void CBoard::generate(SDL_Renderer* renderer)
+void CBoard::generate()
 {
 
     vector< SDL_Point > stack;
@@ -97,6 +100,8 @@ void CBoard::generate(SDL_Renderer* renderer)
         currentCell = nextCell;
         visitedCount++;
     }
+
+    this->mGenerated = true;
 
 }
 
@@ -222,4 +227,56 @@ void CBoard::draw(SDL_Renderer* renderer)
     }
 
     SDL_RenderPresent(renderer);
+}
+
+/**
+ * Clears all the cells to their default values
+ */
+void CBoard::clear() {
+    for (auto row : this->mCells) {
+        for(auto cell : row) {
+            cell->clear();
+        }
+    }
+}
+
+/**
+ * Solves the current maze
+ */
+void CBoard::solve()
+{
+    if (this->mGenerated) {
+        //TODO code goes here
+    }
+}
+
+/**
+ * Clears all cells from being a part of the solution
+ */
+void CBoard::clearSolution()
+{
+    for (auto row : this->mCells) {
+        for (auto cell : row) {
+            cell->setSolution(false);
+            cell->setSolution(false);
+        }
+    }
+    this->mCurrentUserCell = this->mStartingCell;
+    this->mCurrentUserCell->setCurrentUserCell(true);
+}
+
+/**
+ *move a cell in a specific direction
+ */
+void CBoard::move(string direction) {
+    if (this->mCurrentUserCell->getNeighbors()[direction] != nullptr) {
+        
+        this->mCurrentUserCell->setCurrentUserCell(false);
+        this->mCurrentUserCell = this->mCurrentUserCell->getNeighbors()[direction];
+        this->mCurrentUserCell->setCurrentUserCell(true);
+        this->mCurrentUserCell->setSolution(true);
+
+    }
+
+    
 }
