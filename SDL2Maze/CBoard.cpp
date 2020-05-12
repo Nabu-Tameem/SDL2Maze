@@ -17,13 +17,12 @@ CBoard::CBoard(int rows, int cols, int screenWidth, int screenHeight)
 {
     // The number of pixels of empty space in the entire board 
     // This is used to figure out the size in pixels for each column and row
-    int rowsEmptySpaces = (rows - 1) * this->mCellSeperation + this->mBoardSeperation + this->mBorderWidth;
-    int colsEmptySpaces = (cols - 1) * this->mCellSeperation + this->mBoardSeperation + this->mBorderWidth;
+    int rowsEmptySpaces = (rows - 1) * this->mCellSeperation + this->mBorderSeperation + this->mBorderWidth + this->mBorderOffset;
+    int colsEmptySpaces = (cols - 1) * this->mCellSeperation + this->mBorderSeperation + this->mBorderWidth + this->mBorderOffset;
 
     // Calculate the height and width of each cell (floor of the number will be used, because int)
     this->mCellRect.h = (screenHeight - rowsEmptySpaces) / rows;
     this->mCellRect.w = (screenWidth - colsEmptySpaces) / cols;
-    this->mBoardSeperation = this->mCellRect.h;
 
     // Make it into a square
     if (this->mCellRect.h < this->mCellRect.w)
@@ -42,13 +41,16 @@ CBoard::CBoard(int rows, int cols, int screenWidth, int screenHeight)
         this->mCells.push_back(row);
     }
 
+    
+
     // Calculate width and height of the entire board
-    this->mBoardRect.h = (rows - 1) * (this->mCellRect.h + this->mCellSeperation) + this->mCellRect.h + this->mBoardSeperation * 2;
-    this->mBoardRect.w = (cols - 1) * (this->mCellRect.w + this->mCellSeperation) + this->mCellRect.w + this->mBoardSeperation * 2;
+    this->mBoardRect.h = rowsEmptySpaces + rows * this->mCellRect.h - this->mBorderSeperation;
+    this->mBoardRect.w = colsEmptySpaces + cols * this->mCellRect.w - this->mBorderSeperation;
 
     // Calculate the Border rect dimensons and location (centered on screen)
-    this->mBorderRect.h = this->mBoardRect.h + this->mBorderWidth * 2;
-    this->mBorderRect.w = this->mBoardRect.w + this->mBorderWidth * 2;
+    this->mBorderRect.h = this->mBoardRect.h + this->mBorderSeperation * 2;
+    this->mBorderRect.w = this->mBoardRect.w + this->mBorderSeperation * 2;
+    
     this->mBorderRect.x = (screenWidth - this->mBorderRect.w) / 2;
     this->mBorderRect.y = (screenHeight - this->mBorderRect.h) / 2;
 
@@ -194,7 +196,7 @@ void CBoard::draw(SDL_Renderer* renderer)
 {
     //TODO center board
     // Clear the screen
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
     SDL_RenderClear(renderer);
 
     // Draw the border
@@ -210,8 +212,8 @@ void CBoard::draw(SDL_Renderer* renderer)
     SDL_RenderDrawRect(renderer, &this->mBoardRect);
     SDL_RenderFillRect(renderer, &this->mBoardRect);
     
-    int xOffset = this->mBoardRect.x + this->mBoardSeperation;
-    int yOffset = this->mBoardRect.y + this->mBoardSeperation;
+    int xOffset = this->mBoardRect.x + this->mBorderSeperation;
+    int yOffset = this->mBoardRect.y + this->mBorderSeperation;
 
     // draw the cells
     for (auto row : this->mCells) {
@@ -258,9 +260,9 @@ void CBoard::clearSolution()
     for (auto row : this->mCells) {
         for (auto cell : row) {
             cell->setSolution(false);
-            cell->setSolution(false);
         }
     }
+    this->mCurrentUserCell->setCurrentUserCell(false);
     this->mCurrentUserCell = this->mStartingCell;
     this->mCurrentUserCell->setCurrentUserCell(true);
 }
@@ -270,11 +272,16 @@ void CBoard::clearSolution()
  */
 void CBoard::move(string direction) {
     if (this->mCurrentUserCell->getNeighbors()[direction] != nullptr) {
-        
+        shared_ptr<CCell> next = this->mCurrentUserCell->getNeighbors()[direction];
+        // Clear cell if user backtracks
+        if (next->isSolution()) {
+            this->mCurrentUserCell->setSolution(false);
+        }
         this->mCurrentUserCell->setCurrentUserCell(false);
-        this->mCurrentUserCell = this->mCurrentUserCell->getNeighbors()[direction];
+        this->mCurrentUserCell = next;
         this->mCurrentUserCell->setCurrentUserCell(true);
         this->mCurrentUserCell->setSolution(true);
+
 
     }
 

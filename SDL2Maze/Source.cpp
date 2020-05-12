@@ -7,8 +7,8 @@
 // Constants for generating the window and board
 const int SCREENWIDTH = 1280;
 const int SCREENHEIGHT = 720;
-const int ROWS = 40;
-const int COLS = 40;
+const int ROWS = 120;
+const int COLS = 120;
 
 int main(int argc, char* args[]) {
     

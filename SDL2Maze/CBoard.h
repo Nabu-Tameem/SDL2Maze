@@ -60,12 +60,16 @@ private:
 	/// Rectangle used to make the border hollow
 	SDL_Rect mBoardRect;
 
+	/// THE FOLLOWING VALUES ARE THE MINIMUM AND NOT THE ABSOLUTE
 	/// distance from border to the cells
-	int mBoardSeperation = 5;
+	int mBorderSeperation = 5;
 	/// distance between cells
 	int mCellSeperation = 2;
 	/// width of the border
 	int mBorderWidth = 5;
+	/// Distance between border and window wall
+	int mBorderOffset = 5;
+
 	/// The cell to start the generation with, also the boards starting cell
 	std::shared_ptr<CCell> mStartingCell;
 	/// The current cell the user is on

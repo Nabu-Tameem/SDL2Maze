@@ -29,7 +29,7 @@ void CCell::draw(SDL_Rect cellRect, SDL_Renderer* renderer, int xOffset, int yOf
     if (this->mStarting)
         SDL_SetRenderDrawColor(renderer, 0, 255, 0, SDL_ALPHA_OPAQUE);
     else if (this->mGoal)
-        SDL_SetRenderDrawColor(renderer, 255, 255, 0, SDL_ALPHA_OPAQUE);
+        SDL_SetRenderDrawColor(renderer, 255, 0, 0, SDL_ALPHA_OPAQUE);
     else if (this->mCurrentGenerationCell)
         SDL_SetRenderDrawColor(renderer, 255, 125, 0, SDL_ALPHA_OPAQUE);
     else if (this->mCurrentUserCell)
@@ -105,4 +105,6 @@ void CCell::clear()
     this->mWestCell = nullptr;
     
     this->mVisited = false;
+    this->mSolution = false;
+    this->mCurrentUserCell = false;
 }
