@@ -82,8 +82,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>C:\Users\moham\source\repos\SDL2Maze\SDL2Maze\bin\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\moham\source\repos\SDL2Maze\SDL2Maze\bin\lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\vs_dev_libs\SDL2-2.0.12\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\vs_dev_libs\SDL2-2.0.12\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>

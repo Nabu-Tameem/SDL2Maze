@@ -91,7 +91,7 @@ void CBoard::generate(SDL_Renderer* renderer)
         // get the next cell in the board
         nextCell = getNextMove(currentCell);
         this->link(currentCell, nextCell);
-        this->draw(renderer);
+       // this->draw(renderer);
 
         currentCell->setGenerationCell(false);
         currentCell = nextCell;
