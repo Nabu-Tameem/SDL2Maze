@@ -20,25 +20,8 @@ public:
 	/** assignment constructor, deleted */
 	CBoard operator=(CBoard&) = delete;
 
-	void generateCell();
+	void generate(SDL_Renderer* renderer);
 	void draw(SDL_Renderer* renderer);
-
-	/**
-	 * Set the distance between the board and the border
-	 * @param distance The distance between the board and the border
-	 */
-	void setBoardSeperation(int distance) { mBoardSeperation = distance; }
-	/**
-	 * Set the distance between the cell
-	 * @param distance The distance between the cell
-	 */
-	void setCellSeperation(int distance) { mCellSeperation = distance; }
-	/**
-	 * Set the boarder width
-	 * @param width The new width of the boarder
-	 */
-	void setBorderWidth(int width) { mBorderWidth = width; }
-
 
 	// REMOVED NO NEED FOR IT AND COULD CAUSE MISS USE
 	/**
@@ -56,6 +39,18 @@ public:
 	 * @param state The state of the cell as goal
 	 */
 	void setGoal(int x, int y, bool state) { mCells[y][x]->setGoal(true); }
+
+	/**
+	 * get The last row in the board
+	 * @returns int Index of the last row in the board
+	 */
+	int maxRow() { return int(mCells.size()) - 1; }
+	/**
+	 * get The last col in the board
+	 * @returns int Index of the last col in the board
+	 */
+	int maxCol() { return int(mCells[0].size()) - 1; }
+
 
 private:
 	/// All the cells contained in the board
@@ -76,5 +71,10 @@ private:
 	int mBorderWidth = 5;
 	/// The cell to start the generation with, also the boards starting cell
 	std::shared_ptr<CCell> mStartingCell;
+
+	void link(std::shared_ptr<CCell> firstCell, std::shared_ptr<CCell> secondCell);
+
+	std::shared_ptr<CCell> getNextMove(std::shared_ptr<CCell> currentCell);
+	bool isBlocked(std::shared_ptr<CCell>);
 };
 

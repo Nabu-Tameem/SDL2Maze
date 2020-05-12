@@ -1,13 +1,19 @@
 #include <map>
-
+#include <string>
 #include "bin/include/SDL2/SDL.h"
 #include "CCell.h"
 
+using namespace std;
+
 /**
  * Constructor
+ * @param row The row on the board this cell is in
+ * @param col The column on the board this cell is in
  */
-CCell::CCell()
+CCell::CCell(int col, int row)
 {
+    this->mPos.x = col;
+    this->mPos.y = row;
 }
 
 /**
@@ -20,7 +26,16 @@ CCell::CCell()
 void CCell::draw(SDL_Rect cellRect, SDL_Renderer* renderer, int xOffset, int yOffset, int seperation)
 {
     // Draw the cell in white, blocked in black (TODO visited in blue)
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
+    if (this->mStarting)
+        SDL_SetRenderDrawColor(renderer, 0, 255, 0, SDL_ALPHA_OPAQUE);
+    else if (this->mGoal)
+        SDL_SetRenderDrawColor(renderer, 255, 150, 0, SDL_ALPHA_OPAQUE);
+    else if (this->mStopped)
+        SDL_SetRenderDrawColor(renderer, 102, 51, 153, SDL_ALPHA_OPAQUE);
+    else if (this->mCurrentGenerationCell)
+        SDL_SetRenderDrawColor(renderer, 255, 255, 0, SDL_ALPHA_OPAQUE);
+    else
+        SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
 
 
     // Calculate the offset from origin in pixels
@@ -31,9 +46,8 @@ void CCell::draw(SDL_Rect cellRect, SDL_Renderer* renderer, int xOffset, int yOf
     SDL_RenderDrawRect(renderer, &cellRect);
     SDL_RenderFillRect(renderer, &cellRect);
 
-    SDL_SetRenderDrawColor(renderer, 255, 0, 0, SDL_ALPHA_OPAQUE);
 
-
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
     // Draw the horizontal connection between the cells
     if (this->mSouthCell != nullptr) {
         SDL_Rect wallFiller;
@@ -60,4 +74,20 @@ void CCell::draw(SDL_Rect cellRect, SDL_Renderer* renderer, int xOffset, int yOf
         SDL_RenderFillRect(renderer, &wallFiller);
     }
 
+}
+
+/**
+ * Get the neghboring cells
+ * @returns map<string, shared_ptr<CCell> > containing all the linked cells
+ */
+map<string, shared_ptr<CCell>> CCell::getNeighbors()
+{
+    map<string, shared_ptr<CCell>> neighbors;
+    neighbors["north"] = this->mNorthCell;
+    neighbors["south"] = this->mSouthCell;
+    neighbors["east"] = this->mEastCell;
+    neighbors["west"] = this->mWestCell;
+
+
+    return neighbors;
 }

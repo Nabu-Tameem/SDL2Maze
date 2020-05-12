@@ -1,5 +1,6 @@
-#include "CBoard.h"
+#include <stack>
 
+#include "CBoard.h"
 using namespace std;
 
 constexpr int TOP = 0;
@@ -36,7 +37,7 @@ CBoard::CBoard(int rows, int cols, int screenWidth, int screenHeight)
     for (int y = 0; y < rows; y++) {
         vector <shared_ptr<CCell> > row;
         for (int x = 0; x < cols; x++) {
-            shared_ptr<CCell> cell = make_shared<CCell>();
+            shared_ptr<CCell> cell = make_shared<CCell>(x, y);
             row.push_back(cell);
         }
 
@@ -54,37 +55,132 @@ CBoard::CBoard(int rows, int cols, int screenWidth, int screenHeight)
     this->mBorderRect.y = (screenHeight - this->mBorderRect.h) / 2;
 
     // Picks a random cell in first column to be the starting cell
-    int row = rand() % rows;
-    mStartingCell = mCells[row][0];
+    int startingRow = rand() % rows;
+    mStartingCell = mCells[startingRow][0];
     mStartingCell->setStarting(true);
 
 }
 
 /**
- * randomly picks the next cell to use for generation of the maze
- * @param row The row of the current cell
- * @param col The column of the current cell
+ * Pick a cell to be a part of the maze
  */
-void getNextCell(int& row, int& col) {
-    int direction = rand() % 4;
+void CBoard::generate(SDL_Renderer* renderer)
+{
 
-    if (direction == TOP)
-        row -= 1;
-    else if (direction == BOTTOM)
-        row += 1;
-    else if (direction == RIGHT)
-        col += 1;
-    else if (direction == LEFT)
-        col -= 1;
+    vector< SDL_Point > stack;
+    int visitedCount = 0;
+    int boardSize = (int) (this->mCells.size() * this->mCells[0].size());
+
+    shared_ptr<CCell> currentCell = this->mStartingCell;
+    shared_ptr<CCell> nextCell = nullptr;
+    bool end = false;
+    // start generating the board
+    while (visitedCount < boardSize - 1) {
+        //SDL_Delay(500);
+        currentCell->setGenerationCell(true);
+        currentCell->setVisited(true);
+
+        // If no usable cell exists, then pop the stack and backtrack
+        if (this->isBlocked(currentCell) || currentCell->isGoal()) {
+            stack.pop_back();
+            currentCell->setGenerationCell(false);
+            currentCell = this->mCells[stack.back().y][stack.back().x];
+            continue;
+        }
+
+        stack.push_back(currentCell->getPos());
+
+        // get the next cell in the board
+        nextCell = getNextMove(currentCell);
+        this->link(currentCell, nextCell);
+        this->draw(renderer);
+
+        currentCell->setGenerationCell(false);
+        currentCell = nextCell;
+        visitedCount++;
+    }
+
 }
 
 /**
- * Pick a cell to be a part of the maze
+ * Links two cells together
+ * @param firstCell The first cell to link
+ * @param secondCell The second cell to link
  */
-void CBoard::generateCell()
-{
-    
+void CBoard::link(shared_ptr<CCell> firstCell, shared_ptr<CCell> secondCell) {
 
+    // link the two cells
+    if (firstCell->getPos().y > secondCell->getPos().y) {
+        firstCell->setNorth(secondCell);
+        secondCell->setSouth(firstCell);
+    }
+    else if (firstCell->getPos().y < secondCell->getPos().y) {
+        firstCell->setSouth(secondCell);
+        secondCell->setNorth(firstCell);
+    }
+    else if (firstCell->getPos().x > secondCell->getPos().x) {
+        firstCell->setWest(secondCell);
+        secondCell->setEast(firstCell);
+    }
+    else if (firstCell->getPos().x < secondCell->getPos().x) {
+        firstCell->setEast(secondCell);
+        secondCell->setWest(firstCell);
+    }
+}
+
+/**
+ * Randomly pick the next move
+ * @return shared_ptr<CCell> to the next cell, nullptr if the cell doesn't exist
+ */
+shared_ptr<CCell> CBoard::getNextMove(shared_ptr<CCell> currentCell) {
+    shared_ptr<CCell> nextCell = nullptr;
+    int currentRow = currentCell->getPos().y;
+    int currentCol = currentCell->getPos().x;
+    vector<shared_ptr<CCell> > moves;
+
+    // get up move
+    if (currentRow > 0) {
+        std::shared_ptr<CCell> move = mCells[currentRow - 1][currentCol];
+        if (!move->isVisited())
+            moves.push_back(move);
+    }
+    // get down move
+    if (currentRow < (int)this->mCells.size() - 1) {
+        std::shared_ptr<CCell> move = mCells[currentRow + 1][currentCol];
+        if (!move->isVisited())
+            moves.push_back(move);
+    }
+    // get right move
+    if (currentCol < (int)this->mCells[0].size() - 1) {
+        std::shared_ptr<CCell> move = mCells[currentRow][currentCol + 1];
+        if (!move->isVisited())
+            moves.push_back(move);
+    }
+    // get left move
+    if (currentCol > 0) {
+        std::shared_ptr<CCell> move = mCells[currentRow][currentCol - 1];
+        if (!move->isVisited())
+            moves.push_back(move);
+    }
+    
+    int nextMove = rand() % (int)moves.size();
+
+    return moves[nextMove];
+}
+
+bool CBoard::isBlocked(shared_ptr<CCell> currentCell)
+{
+    // In order for a cell to be usable it has to exist and not be visited
+    int currentRow = currentCell->getPos().y;
+    int currentCol = currentCell->getPos().x;
+
+    // check if the cells exist and not visited
+    bool usableTop = ((currentRow > 0) && (!this->mCells[currentRow - 1][currentCol]->isVisited()));
+    bool usableBottom = ((currentRow < (int)mCells.size() - 1) && (!this->mCells[currentRow + 1][currentCol]->isVisited()));
+    bool usableRight = ((currentCol < (int)mCells[0].size() - 1) && (!this->mCells[currentRow][currentCol + 1]->isVisited()));
+    bool usableLeft = ((currentCol > 0) && (!this->mCells[currentRow][currentCol - 1]->isVisited()));
+    
+    return !(usableTop || usableBottom || usableLeft || usableRight);
 }
 
 /**

@@ -7,13 +7,15 @@ int main(int argc, char* args[]) {
 	SDL_Window* window = SDL_CreateWindow("test", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, SDL_WINDOW_SHOWN);
 	SDL_Renderer* renderer = SDL_CreateRenderer(window, 0, 0);
     CBoard board(80, 80, 1280, 720);
-    srand(time(NULL));
+    //srand(time(NULL));
+    srand(0);
     bool running = true;
-    board.setGoal(80, 79, true);
+    board.setGoal(board.maxCol(), board.maxRow() - 1, true);
+    board.generate(renderer);
+
+
     while (running) {
         SDL_Event event;
-        board.draw(renderer);
-        board.generateCell();
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
                 running = false;
