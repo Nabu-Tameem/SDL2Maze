@@ -4,8 +4,8 @@
 #include <vector>
 #include <map>
 #include <string>
+#include <SDL.h>
 
-#include "bin/include/SDL2/SDL.h"
 #include "CCell.h"
 
 class CBoard

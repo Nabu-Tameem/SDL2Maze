@@ -1,5 +1,3 @@
-#include <stack>
-
 #include "CBoard.h"
 using namespace std;
 

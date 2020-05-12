@@ -1,6 +1,6 @@
 #include <map>
 #include <string>
-#include "bin/include/SDL2/SDL.h"
+#include <SDL.h>
 #include "CCell.h"
 
 using namespace std;

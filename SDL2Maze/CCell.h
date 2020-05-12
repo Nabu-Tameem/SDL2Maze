@@ -3,8 +3,7 @@
 #include <utility>
 #include <memory>
 #include <string>
-
-#include "bin/include/SDL2/SDL.h"
+#include <SDL.h>
 
 class CCell
 {

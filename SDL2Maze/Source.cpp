@@ -1,5 +1,6 @@
-#include "bin/include/SDL2/SDL.h"
+#include <SDL.h>
 #include <time.h>
+
 #include "CBoard.h"
 
 int main(int argc, char* args[]) {
