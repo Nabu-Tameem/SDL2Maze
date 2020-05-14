@@ -7,9 +7,9 @@
 // Constants for generating the window and board
 const int SCREENWIDTH = 1280;
 const int SCREENHEIGHT = 720;
-const int ROWS = 120;
-const int COLS = 120;
-
+const int ROWS = 30;
+const int COLS = 30;
+// TODO Add winning condition, add solver, make entire board green when solved by user
 int main(int argc, char* args[]) {
     
     // Initialize sdl
@@ -21,7 +21,7 @@ int main(int argc, char* args[]) {
         SDL_Window* window = nullptr;
         SDL_Renderer* renderer = nullptr;
 
-        // Create the window and renderer
+        
         if (SDL_CreateWindowAndRenderer(SCREENWIDTH, SCREENHEIGHT, SDL_WINDOW_SHOWN,
             &window, &renderer) != 0) {
             printf("ERROR: %s.\nUnable to create window and renderer.\n", SDL_GetError());
@@ -37,7 +37,7 @@ int main(int argc, char* args[]) {
 
             board.draw(renderer);
 
-            // Event loop
+            
             bool done = false;
             while (!done) {
                  SDL_Event event;
@@ -51,32 +51,32 @@ int main(int argc, char* args[]) {
 
                      case SDL_KEYDOWN:
                          switch (event.key.keysym.sym) {
-                         case SDLK_RETURN:  // generate a new board when return is hit
+                         case SDLK_RETURN:  // generate a new board
                              board.clear();
                              board.generate();
                              break;
                          
-                         case SDLK_SPACE:   // generate a solution to the current board
+                         case SDLK_SPACE:   
                              board.solve();
                              break;
 
-                         case SDLK_TAB:     // clear any generated solution
+                         case SDLK_TAB:     
                              board.clearSolution();
                              break;
 
-                         case SDLK_UP:      // Move the user up on the maze
+                         case SDLK_UP:      
                              board.move("north");
                              break;
 
-                         case SDLK_DOWN:      // Move the user down on the maze
+                         case SDLK_DOWN:      
                              board.move("south");
                              break;
 
-                         case SDLK_RIGHT:      // Move the user right on the maze
+                         case SDLK_RIGHT:     
                              board.move("east");
                              break;
 
-                         case SDLK_LEFT:      // Move the user left on the maze
+                         case SDLK_LEFT:      
                              board.move("west");
                              break;
 

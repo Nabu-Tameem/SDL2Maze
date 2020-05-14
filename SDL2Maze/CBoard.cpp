@@ -43,14 +43,12 @@ CBoard::CBoard(int rows, int cols, int screenWidth, int screenHeight)
 
     
 
-    // Calculate width and height of the entire board
+    
     this->mBoardRect.h = rowsEmptySpaces + rows * this->mCellRect.h - this->mBorderSeperation;
     this->mBoardRect.w = colsEmptySpaces + cols * this->mCellRect.w - this->mBorderSeperation;
 
-    // Calculate the Border rect dimensons and location (centered on screen)
     this->mBorderRect.h = this->mBoardRect.h + this->mBorderSeperation * 2;
     this->mBorderRect.w = this->mBoardRect.w + this->mBorderSeperation * 2;
-    
     this->mBorderRect.x = (screenWidth - this->mBorderRect.w) / 2;
     this->mBorderRect.y = (screenHeight - this->mBorderRect.h) / 2;
 
@@ -65,7 +63,8 @@ CBoard::CBoard(int rows, int cols, int screenWidth, int screenHeight)
 }
 
 /**
- * Pick a cell to be a part of the maze
+ * Generate the maze using DFS algorithm.
+ * linked cells in the graph will show as connected in the board.
  */
 void CBoard::generate()
 {
