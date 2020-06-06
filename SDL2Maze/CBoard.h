@@ -20,7 +20,7 @@ public:
 	/** assignment constructor, deleted */
 	CBoard operator=(CBoard&) = delete;
 
-	void generate();
+	void generate(SDL_Renderer* renderer);
 	void draw(SDL_Renderer* renderer);
 
 	/**
@@ -43,7 +43,7 @@ public:
 	int maxCol() { return int(mCells[0].size()) - 1; }
 
 	void clear();
-	void solve();
+	void solve(SDL_Renderer* renderer);
 	void clearSolution();
 
 	void move(std::string direction);
@@ -76,10 +76,12 @@ private:
 	std::shared_ptr<CCell> mCurrentUserCell;
 
 	bool mGenerated = false; /// indicate if a maze has already been generated
-
+	bool mSolved = false;
 	void link(std::shared_ptr<CCell> firstCell, std::shared_ptr<CCell> secondCell);
-	std::shared_ptr<CCell> getNextMove(std::shared_ptr<CCell> currentCell);
+	std::shared_ptr<CCell> getNextGenerationMove(std::shared_ptr<CCell> currentCell);
 	bool isBlocked(std::shared_ptr<CCell>);
+	void clearVisited();
+	std::shared_ptr<CCell> getNeighbor(std::shared_ptr<CCell> cell);
 
 };
 

@@ -7,8 +7,8 @@
 // Constants for generating the window and board
 const int SCREENWIDTH = 1280;
 const int SCREENHEIGHT = 720;
-const int ROWS = 30;
-const int COLS = 30;
+const int ROWS = 40;
+const int COLS = 40;
 // TODO Add winning condition, add solver, make entire board green when solved by user
 int main(int argc, char* args[]) {
     
@@ -53,11 +53,11 @@ int main(int argc, char* args[]) {
                          switch (event.key.keysym.sym) {
                          case SDLK_RETURN:  // generate a new board
                              board.clear();
-                             board.generate();
+                             board.generate(renderer);
                              break;
                          
                          case SDLK_SPACE:   
-                             board.solve();
+                             board.solve(renderer);
                              break;
 
                          case SDLK_TAB:     

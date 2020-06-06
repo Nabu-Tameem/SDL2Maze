@@ -1,10 +1,13 @@
 #include "CBoard.h"
+#include <Windows.h>
 using namespace std;
 
 constexpr int TOP = 0;
 constexpr int RIGHT = 1; 
 constexpr int BOTTOM = 2;
 constexpr int LEFT = 3;
+
+const tuple<string> DIRECTIONS = ("north", "south", "east", "west");
 
 /**
  * Constructor
@@ -66,9 +69,9 @@ CBoard::CBoard(int rows, int cols, int screenWidth, int screenHeight)
  * Generate the maze using DFS algorithm.
  * linked cells in the graph will show as connected in the board.
  */
-void CBoard::generate()
-{
-
+void CBoard::generate(SDL_Renderer* renderer)
+{    
+    this->clearVisited();
     vector< SDL_Point > stack;
     int visitedCount = 0;
     int boardSize = (int) (this->mCells.size() * this->mCells[0].size());
@@ -84,18 +87,19 @@ void CBoard::generate()
 
         // If no usable cell exists, then pop the stack and backtrack
         if (this->isBlocked(currentCell) || currentCell->isGoal()) {
-            stack.pop_back();
             currentCell->setGenerationCell(false);
             currentCell = this->mCells[stack.back().y][stack.back().x];
+            stack.pop_back();
             continue;
         }
 
         stack.push_back(currentCell->getPos());
 
         // get the next cell in the board
-        nextCell = getNextMove(currentCell);
+        nextCell = getNextGenerationMove(currentCell);
         this->link(currentCell, nextCell);
-       // this->draw(renderer);
+        //this->draw(renderer);
+        
 
         currentCell->setGenerationCell(false);
         currentCell = nextCell;
@@ -103,7 +107,6 @@ void CBoard::generate()
     }
 
     this->mGenerated = true;
-
 }
 
 /**
@@ -136,7 +139,7 @@ void CBoard::link(shared_ptr<CCell> firstCell, shared_ptr<CCell> secondCell) {
  * Randomly pick the next move
  * @return shared_ptr<CCell> to the next cell, nullptr if the cell doesn't exist
  */
-shared_ptr<CCell> CBoard::getNextMove(shared_ptr<CCell> currentCell) {
+shared_ptr<CCell> CBoard::getNextGenerationMove(shared_ptr<CCell> currentCell) {
     shared_ptr<CCell> nextCell = nullptr;
     int currentRow = currentCell->getPos().y;
     int currentCol = currentCell->getPos().x;
@@ -172,6 +175,10 @@ shared_ptr<CCell> CBoard::getNextMove(shared_ptr<CCell> currentCell) {
     return moves[nextMove];
 }
 
+/**
+ * Check if a cell has already been visited and exists
+ * @param currentCell The cell to check
+ */
 bool CBoard::isBlocked(shared_ptr<CCell> currentCell)
 {
     // In order for a cell to be usable it has to exist and not be visited
@@ -185,6 +192,15 @@ bool CBoard::isBlocked(shared_ptr<CCell> currentCell)
     bool usableLeft = ((currentCol > 0) && (!this->mCells[currentRow][currentCol - 1]->isVisited()));
     
     return !(usableTop || usableBottom || usableLeft || usableRight);
+}
+
+void CBoard::clearVisited()
+{
+    for (auto row : this->mCells) {
+        for (shared_ptr<CCell> cell : row) {
+            cell->setVisited(false);
+        }
+    }
 }
 
 /**
@@ -242,12 +258,68 @@ void CBoard::clear() {
 }
 
 /**
+ * Get a random neighbor of a cell
+ */
+shared_ptr<CCell> CBoard::getNeighbor(shared_ptr<CCell> cell) {
+    vector<shared_ptr<CCell> > validNeighbors = {};
+    map<string, shared_ptr<CCell> > neighbors = cell->getNeighbors();
+    
+    // Find neighbors
+    for (auto neighborDirectionPair : neighbors) {
+        shared_ptr<CCell> neighbor = neighborDirectionPair.second;
+        if (neighbor != nullptr && neighbor->isVisited() == 0) {
+            validNeighbors.push_back(neighbor);
+        }
+    }
+
+    if (validNeighbors.size() == 0) {
+        return nullptr;
+    }
+    
+    return validNeighbors[rand() % validNeighbors.size()];
+
+}
+
+/**
  * Solves the current maze
  */
-void CBoard::solve()
+void CBoard::solve(SDL_Renderer* renderer)
 {
     if (this->mGenerated) {
-        //TODO code goes here
+
+        this->clearSolution();
+        this->clearVisited();
+
+        vector< SDL_Point > stack;
+        int visitedCount = 0;
+        int boardSize = (int)(this->mCells.size() * this->mCells[0].size());
+
+        shared_ptr<CCell> currentCell = this->mStartingCell;
+        shared_ptr<CCell> nextCell = nullptr;
+        
+        // start solving the board
+        while (currentCell->isGoal() == 0) {
+            currentCell->setVisited(true);
+            currentCell->setSolution(true);
+            nextCell = this->getNeighbor(currentCell);
+
+            if (nextCell == nullptr) {
+                currentCell->setGenerationCell(false);
+                currentCell->setSolution(false);
+                currentCell = this->mCells[stack.back().y][stack.back().x];
+                stack.pop_back();
+                continue;
+            }
+
+            stack.push_back(currentCell->getPos());
+
+            currentCell->setGenerationCell(false);
+            currentCell = nextCell;
+        }
+
+        this->mSolved = true;
+        
+        this->clearVisited();
     }
 }
 
@@ -270,6 +342,10 @@ void CBoard::clearSolution()
  *move a cell in a specific direction
  */
 void CBoard::move(string direction) {
+    if (this->mSolved) {
+        this->clearSolution();
+        this->mSolved = false;
+    }
     if (this->mCurrentUserCell->getNeighbors()[direction] != nullptr) {
         shared_ptr<CCell> next = this->mCurrentUserCell->getNeighbors()[direction];
         // Clear cell if user backtracks
@@ -280,8 +356,6 @@ void CBoard::move(string direction) {
         this->mCurrentUserCell = next;
         this->mCurrentUserCell->setCurrentUserCell(true);
         this->mCurrentUserCell->setSolution(true);
-
-
     }
 
     
