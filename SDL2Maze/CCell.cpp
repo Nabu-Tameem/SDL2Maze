@@ -49,9 +49,14 @@ void CCell::draw(SDL_Rect cellRect, SDL_Renderer* renderer, int xOffset, int yOf
     SDL_RenderFillRect(renderer, &cellRect);
 
 
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
     // Draw the horizontal connection between the cells
     if (this->mSouthCell != nullptr) {
+        if (this->mSouthCell->isSolution() && this->mSolution) {
+            SDL_SetRenderDrawColor(renderer, 0, 255, 255, SDL_ALPHA_OPAQUE);
+        }
+        else {
+            SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
+        }
         SDL_Rect wallFiller;
 
         wallFiller.w = cellRect.w;
@@ -65,6 +70,12 @@ void CCell::draw(SDL_Rect cellRect, SDL_Renderer* renderer, int xOffset, int yOf
 
     // Draw the vertical connection between the cells
     if (this->mEastCell != nullptr) {
+        if (this->mEastCell->isSolution() && this->mSolution) {
+            SDL_SetRenderDrawColor(renderer, 0, 255, 255, SDL_ALPHA_OPAQUE);
+        }
+        else {
+            SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
+        }
         SDL_Rect wallFiller;
 
         wallFiller.w = seperation;
