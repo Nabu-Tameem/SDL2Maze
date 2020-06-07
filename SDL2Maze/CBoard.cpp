@@ -1,5 +1,6 @@
 #include "CBoard.h"
 #include <Windows.h>
+#include <ctime>
 using namespace std;
 
 constexpr int TOP = 0;
@@ -55,14 +56,6 @@ CBoard::CBoard(int rows, int cols, int screenWidth, int screenHeight)
     this->mBorderRect.x = (screenWidth - this->mBorderRect.w) / 2;
     this->mBorderRect.y = (screenHeight - this->mBorderRect.h) / 2;
 
-    // Picks a random cell in first column to be the starting cell
-    int startingRow = rand() % rows;
-    mStartingCell = mCells[startingRow][0];
-    mStartingCell->setStarting(true);
-
-    mCurrentUserCell = mStartingCell;
-    mCurrentUserCell->setSolution(true);
-
 }
 
 /**
@@ -71,6 +64,17 @@ CBoard::CBoard(int rows, int cols, int screenWidth, int screenHeight)
  */
 void CBoard::generate(SDL_Renderer* renderer)
 {    
+    if (mStartingCell != nullptr) {
+        mStartingCell->setStarting(false);
+    }
+    // Picks a random cell in first column to be the starting cell
+    int startingRow = rand() % mCells.size();
+    this->mStartingCell = mCells[startingRow][0];
+    this->mStartingCell->setStarting(true);
+
+    this->mCurrentUserCell = mStartingCell;
+    this->mCurrentUserCell->setSolution(true);
+
     this->clearVisited();
     vector< SDL_Point > stack;
     int visitedCount = 0;
